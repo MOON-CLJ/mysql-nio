@@ -236,6 +236,10 @@ final class MySQLConnectionHandler: ChannelDuplexHandler {
 
         let hash = try doInitialAuthPluginHandling(authPluginName: authPluginName, isTLS: isTLS, passwordInput: state.password, authPluginData: handshakeRequest.authPluginData, done: state.done)
 
+        // DEBUG: Check if CLIENT_DEPRECATE_EOF is present
+        let hasDeprecateEOF = MySQLProtocol.CapabilityFlags.clientDefault.contains(.CLIENT_DEPRECATE_EOF)
+        self.logger.info("🔒 Handshake Capabilities Check - CLIENT_DEPRECATE_EOF enabled: \(hasDeprecateEOF)")
+
         let res = MySQLPacket.HandshakeResponse41(
             capabilities: .clientDefault,
             maxPacketSize: 0,
